@@ -1,8 +1,8 @@
-import argparse
-import json
-import os
-import zipfile
 if __name__ == "__main__":
+    import argparse
+    import json
+    import os
+    import zipfile
     from base.docxhandler import DocxHandler as dh
     from base.exceptions import *
     from base.fontmapper import FontMapper as fm
@@ -65,3 +65,8 @@ if __name__ == "__main__":
             print("Unexpected error... Exiting !  "+str(e))
     else:
         print("Unsupported operation mode")
+else:
+    from .base.fontmapper import *
+    from .base.docxhandler import *
+    from .base.txthandler import *
+    from .base.exceptions import *

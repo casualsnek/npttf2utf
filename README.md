@@ -1,5 +1,4 @@
 
-
 # **npTTF2UTF**
 
 Python module/script to map Nepali ASCII font faces like Preeti, Sagarmatha, and more to devanagari unicode
@@ -58,14 +57,14 @@ It will map the content of document to unicode  and save it as "document_mapped_
 ```
 $ git clone https://github.com/trippygeese/npttf2utf.git
 $ python
->> import npttf2utf.base
+>> import npttf2utf
 ```
 
 <br>
 
-## **Class: npttf2utf.base.fontmapper.FontMapper**
+## **Class: npttf2utf.FontMapper**
 
-"npttf2utf.base.fontmapper.FontMapper" class can be used to map the fonts to their unicode conterpart. It is also the base for other document converters
+"npttf2utf.FontMapper" class can be used to map the fonts to their unicode conterpart. It is also the base for other document converters
 
 
 ### **Method: \_\_init \_\_**
@@ -99,8 +98,8 @@ Returns: String
 Example usage:
 
 ```
->> import npttf2utf.base
->> mapper = npttf2utf.base.fontmapper.FontMapper("map.json")
+>> import npttf2utf
+>> mapper = npttf2utf.FontMapper("npttf2utf/map.json")
 >> mapper.map_to_unicode("asdfghjk", from_font="Preeti", unescape_html=False)
 बकमानजवप
 >> 
@@ -108,9 +107,9 @@ Example usage:
 
 <br>
 
-## **Class: npttf2utf.base.docxhandler.DocxHandler**
+## **Class: npttf2utf.DocxHandler**
 
-"npttf2utf.base.txthandler.DocxHandler" class can be used to map docx files to unicode and save them
+"npttf2utf.DocxHandler" class can be used to map docx files to unicode and save them
 
 
 ### **Method: \_\_init \_\_**
@@ -161,19 +160,19 @@ Returns: None
 Example usage:
 
 ```
->> import npttf2utf.base
->> converter = npttf2utf.base.docxhandler.DocxHandler("map.json", default_unicode_font_name="Kalimati")
+>> import npttf2utf
+>> converter = npttf2utf.DocxHandler("npttf2utf/map.json", default_unicode_font_name="Kalimati")
 >> converter.detect_used_fonts("document_with_ASCII_font_faces.docx")
 ["Preeti", "Sagarmaths"]
->> mapper.map_fonts("document_with_ASCII_font_faces.docx", output_file_path="mapped_document.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table"])
+>> converter.map_fonts("document_with_ASCII_font_faces.docx", output_file_path="mapped_document.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table"])
 >>
 ```
 
 <br>
 
-## **Class: npttf2utf.base.txthandler.TxtHandler**
+## **Class: npttf2utf.TxtHandler**
 
-"npttf2utf.base.txthandler.TxtHandler" class can be used to map plain text files to unicode and save them
+"npttf2utf.TxtHandler" class can be used to map plain text files to unicode and save them
 
 
 ### **Method: \_\_init \_\_**
@@ -207,8 +206,8 @@ Returns: None
 | components | Serves no purpose, just there to match the method call of DocxHandler|  False |
 
 ```
->> import npttf2utf.base
->> converter = npttf2utf.base.txthandler.TxTHandler("map.json")
+>> import npttf2utf
+>> converter = npttf2utf.TxTHandler("npttf2utf/map.json")
 >> converter.map_fonts("txt_with_ASCII_font_faces.txt", output_file_path="mapped_txt.txt", from_font="Preeti", to_font="unicode", components=[])
 >>
 ```
@@ -249,7 +248,7 @@ Create a new file to handle the file type. (You can use docxhandler.py and modif
 
 ### Adding mapping for a new font
 
-Open "map.json" and add a JSON key with this structure
+Open "npttf2utf/map.json" and add a JSON key with this structure
 
 ```
 "font_name":{
@@ -275,4 +274,3 @@ post-rules    - The words may not be as expected directly after mapping. So this
 
 
 ### Feel free to use this project for any purpose and long as you comply with the license. Any contribution to the project is highly appreciated. If you find any bugs please report it
-
