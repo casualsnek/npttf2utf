@@ -47,7 +47,9 @@ class DocxHandler:
                     used_font = "dummYFontThatWillNeverBeUsed"
                     text_container = relation.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
                     if font_property is not None:
+                        # TODO : Set used font to 'unicode' if cs attrib exists and is a knkown devanagari unicode font name else get value of hansi attribute
                         used_font = font_property.attrib.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii", "dummYFontThatWillNeverBeUsed")
+                        # TODO: Remove ascii tags if mapping to unicode else if mapping to preeti remove sc tags and add ascii fields also this attribute removal should be done when font are mapped else attributes will be removed even if fonts were not mapped
                         font_property.attrib = {key:value for key,value in font_property.attrib.items() if not key in ["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii", "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}hansi"]}
                         font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"] = self.default_unicode_font_name
                     if text_container is not None:
