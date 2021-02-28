@@ -107,7 +107,7 @@ class DocxHandler:
                 detected_supported_fonts.append(used_font)
         return detected_supported_fonts
 
-    def map_fonts(self, orginal_file_path, output_file_path="mapped.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table", "shape"]):
+    def map_fonts(self, orginal_file_path, output_file_path="mapped.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table", "shape"], known_unicode_fonts=[]):
         xml_string = self.__get_xml(orginal_file_path)
         tree = ET.ElementTree(ET.fromstring(xml_string))
         root = tree.getroot()
@@ -117,14 +117,14 @@ class DocxHandler:
 
             # Process normal paragraphs. They (w:p) lie directly inside body as child
             if "body_paragraph" in components:
-                self.__handleWPContainersInParagraphs(general_paragraphs, from_font=from_font, to_font=to_font)
+                self.__handleWPContainersInParagraphs(general_paragraphs, from_font=from_font, to_font=to_font, known_unicode_fonts=known_unicode_fonts)
 
             # Process paragraphs. They (w:p) lie inside "w:tbl" as child of table row and column, but we can just iterate inside table to get them
             if "table" in components:
                 for table in body.iterfind("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tbl"):
                     # Now since we are not direct child of normal paragraphs but inside a table, We can use .iter() to get all the paragraphs inside current table without modifying other components
                     paragraphs = table.iter("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p")
-                    self.__handleWPContainersInParagraphs(paragraphs, from_font=from_font, to_font=to_font)
+                    self.__handleWPContainersInParagraphs(paragraphs, from_font=from_font, to_font=to_font, known_unicode_fonts=known_unicode_fonts)
             
             # Process shapes. They lie inside "w:p" (Main paragraphs), find them. Shapes wont be processed in "body_paragraph" and SHOULD NOT BE as content in shape lie much deeper 
             if "shape" in components:
@@ -132,7 +132,7 @@ class DocxHandler:
                     tbx_content = wps_txbx.iter("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}txbxContent") # They contain  data for (t)e(x)t(b)o(x)/Shapes. They content another "w:p" which has actual text content
                     for txbx in txbxContent:
                         paragraphs = txbx.iterfind("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p")
-                        self.__handleWPContainersInParagraphs(paragraphs, from_font=from_font, to_font=to_font)
+                        self.__handleWPContainersInParagraphs(paragraphs, from_font=from_font, to_font=to_font, known_unicode_fonts=known_unicode_fonts)
         tmp_dir = tempfile.mkdtemp()
         self.__register_namespaces(StringIO(xml_string))
         tree.write(os.path.join(tmp_dir, "document.xml"), encoding="utf-8", xml_declaration=True)

@@ -2,12 +2,14 @@ import re
 import json
 import html
 from .exceptions import NoMapForOriginException
+from .preetimapper import convert as pmconvert
 
 class FontMapper():
 	"""docstring for FontMapper"""
 	def __init__(self, map_json):
 		self.all_rules = json.load(open(map_json, 'r'))
-		self.supported_maps = list(self.all_rules.keys()).append("unicode")
+		self.supported_maps = list(self.all_rules.keys())
+		self.supported_maps.append("unicode")
 		self.known_devanagari_unicode_fonts = ["Kalimati", "Mangal", "Noto Sans Devanagari"]
     
 
@@ -44,7 +46,7 @@ class FontMapper():
 			# Map the string to unicode first
 			unicodemappedstring  = self.map_to_unicode(string, from_font)
 			# Now map the unicode to preeti
-			mapped_string = pm.convert(unicodemappedstring)
+			mapped_string = pmconvert(unicodemappedstring)
 			if unescape_html:
 				return html.escape(mapped_string)
 			else:

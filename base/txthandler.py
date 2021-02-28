@@ -10,7 +10,7 @@ class TxtHandler:
     def detect_used_fonts(self, docx_file_path):
         return []
 
-    def map_fonts(self, orginal_file_path, output_file_path="mapped.txt", from_font="Preeti", to_font="unicode", components=[]):
+    def map_fonts(self, orginal_file_path, output_file_path="mapped.txt", from_font="Preeti", to_font="unicode", components=[], known_unicode_fonts=[]):
         if from_font != "auto":
             with open(orginal_file_path, "r") as orginal_file:
                 lines_orginal = orginal_file.readlines()
