@@ -18,6 +18,8 @@ class TxtHandler:
             for line in lines_orginal:
                 if to_font == "unicode":
                     output_file.write(self.mapper.map_to_unicode(line, from_font, False))
+                elif to_font == "Preeti":
+                    output_file.write(self.mapper.map_to_preeti(line, from_font, False))
                 else:
                     raise UnsupportedMapToException
             output_file.close()

@@ -38,31 +38,57 @@ class DocxHandler:
         for ns in namespaces:
             ET.register_namespace(ns, namespaces[ns])
     
-    def __handleWPContainersInParagraphs(self, paragraphs, from_font="auto", to_font="unicode"):
+    def __handleWPContainersInParagraphs(self, paragraphs, from_font="auto", to_font="unicode", known_unicode_fonts=[]):
         for paragraph in paragraphs:
             for relation in paragraph.iterfind("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r"):
                 relation_property = relation.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr")
                 if relation_property is not None:
                     font_property = relation_property.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rFonts")
                     used_font = "dummYFontThatWillNeverBeUsed"
+                    used_unicode_font = "dummYFontThatWillNeverBeUsed"
                     text_container = relation.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
                     if font_property is not None:
-                        # TODO : Set used font to 'unicode' if cs attrib exists and is a knkown devanagari unicode font name else get value of hansi attribute
-                        used_font = font_property.attrib.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii", "dummYFontThatWillNeverBeUsed")
-                        # TODO: Remove ascii tags if mapping to unicode else if mapping to preeti remove sc tags and add ascii fields also this attribute removal should be done when font are mapped else attributes will be removed even if fonts were not mapped
-                        font_property.attrib = {key:value for key,value in font_property.attrib.items() if not key in ["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii", "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}hansi"]}
-                        font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"] = self.default_unicode_font_name
+                        # Set used font to 'unicode' if cs attrib exists and is a known devanagari unicode font name else get value of hansi attribute
+                        try:
+                            used_unicode_font = font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"]
+                            used_font = "unicode"
+                        except:
+                            used_font = font_property.attrib.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii", "dummYFontThatWillNeverBeUsed")
                     if text_container is not None:
                         orginal_text = text_container.text
                         if from_font == "auto":
                             if used_font in self.supported_ttf_fonts:
                                 if to_font == "unicode":
+                                    # Remove hansi and ascii attributes and add cs attribute with value of unicode font
+                                    font_property.attrib = {key:value for key,value in font_property.attrib.items() if not key in ["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii", "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}hansi"]}
+                                    font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"] = self.default_unicode_font_name
+                                    # Replace original text with mapped text
                                     text_container.text = self.mapper.map_to_unicode(orginal_text, used_font, True)
+                                elif to_font == "Preeti":
+                                    # Remove cs add hansi and ascii attribute with value of 'Preeti'
+                                    font_property.attrib = {key:value for key,value in font_property.attrib.items() if not key in ["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"]}
+                                    font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii"] = "Preeti"
+                                    font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}hansi"] = "Preeti"
+                                    # Replace original text with mapped text
+                                    if used_unicode_font in self.known_devanagari_unicode_fonts or known_unicode_fonts:
+                                        text_container.text = self.mapper.map_to_preeti(orginal_text, used_font, True)
                                 else:
                                     raise UnsupportedMapToException
                         else:
                             if to_font == "unicode":
+                                # Remove hansi and ascii attributes and add cs attribute with value of unicode font
+                                font_property.attrib = {key:value for key,value in font_property.attrib.items() if not key in ["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii", "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}hansi"]}
+                                font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"] = self.default_unicode_font_name
+                                # Replace original text with mapped text
                                 text_container.text = self.mapper.map_to_unicode(orginal_text, from_font, True)
+                            elif to_font == "Preeti":
+                                # Remove cs add hansi and ascii attribute with value of 'Preeti'
+                                font_property.attrib = {key:value for key,value in font_property.attrib.items() if not key in ["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"]}
+                                font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii"] = "Preeti"
+                                font_property.attrib["{http://schemas.openxmlformats.org/wordprocessingml/2006/main}hansi"] = "Preeti"
+                                # Replace original text with mapped text
+                                if used_unicode_font in self.known_devanagari_unicode_fonts or known_unicode_fonts:
+                                    text_container.text = self.mapper.map_to_preeti(orginal_text, from_font, True)
                             else:
                                 raise UnsupportedMapToException
         return True
