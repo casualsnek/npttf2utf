@@ -28,7 +28,7 @@ if __name__ == "__main__":
     font = args.font
     op_mode = args.mode
     def splitnclean(string):
-        lis = split(string)
+        lis = string.split(",")
         for index, item in enumerate(lis):
             lis[index] = item.strip()
         return lis
@@ -76,8 +76,8 @@ if __name__ == "__main__":
             print("Font autodetection does not work on txt files :(")
         except zipfile.BadZipFile:
             print("Improper docx file")
-        except Exception as e:
-            print("Unexpected error... Exiting !  "+str(e))
+        #except Exception as e:
+        #    print("Unexpected error... Exiting !  "+str(e))
     else:
         print("Unsupported operation mode")
 else:
