@@ -16,13 +16,15 @@ class DocxHandler:
         self.default_unicode_font_name = default_unicode_font_name
         self.known_devanagari_unicode_fonts = ["Kalimati", "Mangal", "Noto Sans Devanagari"]
 
-    def __get_xml(self, docx_file_path):
+    @staticmethod
+    def __get_xml(docx_file_path):
         with zipfile.ZipFile(docx_file_path) as zf:
             with zf.open('word/document.xml') as xf:
                 xml_content = xf.read().decode('utf-8')
         return xml_content
 
-    def __save_docx(self, xml_content, output_file_path, original_file_path):
+    @staticmethod
+    def __save_docx(xml_content, output_file_path, original_file_path):
         tmp_dir = tempfile.mkdtemp()
         with zipfile.ZipFile(original_file_path, 'r') as zipObj:
             zipObj.extractall(tmp_dir)
@@ -35,12 +37,14 @@ class DocxHandler:
         shutil.rmtree(tmp_dir)
         return True
 
-    def __register_namespaces(self, xml):
+    @staticmethod
+    def __register_namespaces(xml):
         namespaces = dict([node for _, node in ET.iterparse(xml, events=['start-ns'])])
         for ns in namespaces:
             ET.register_namespace(ns, namespaces[ns])
 
-    def __get_font_data_from_relation_property(self, relation_property):
+    @staticmethod
+    def __get_font_data_from_relation_property(relation_property):
         used_font = "dummyFontThatWillNeverBeUsed"
         used_unicode_font = "dummyFontThatWillNeverBeUsed"
         font_property = relation_property.find(
@@ -83,7 +87,8 @@ class DocxHandler:
         else:
             raise UnsupportedMapToException("Document cannot be mapped to target ")
 
-    def __strip_font_attributes(self, dictionary):
+    @staticmethod
+    def __strip_font_attributes(dictionary):
         # Don't know why but removing cstheme and eastAsiaTheme does magic and fixes map to incorrect font
         # So yes.... This is needed
         return {key: value for key, value in dictionary.items()
@@ -108,7 +113,6 @@ class DocxHandler:
                     )
                     text_container = relation.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
                     if text_container is not None:
-                        original_text = text_container.text
                         continue_mapping = True
                         set_from_font = None
                         if from_font == "auto":
