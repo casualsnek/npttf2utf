@@ -5,6 +5,18 @@ __pycache__/
 
 # C extensions
 *.so
+# Extra custom gitignores
+venv/
+**/__pycache__/
+*.pyc
+cookie.*
+test/
+.idea/
+*.log
+static/screenshot/*.png
+*.sh
+*.env
+
 
 # Distribution / packaging
 .Python
@@ -123,3 +135,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/test_converts.py

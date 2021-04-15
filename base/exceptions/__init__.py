@@ -1,11 +1,13 @@
 # Font Mapper exceptions
 class NoMapForOriginException(Exception):
-	pass
+    pass
+
 
 # General file type handler exceptions
 class UnsupportedMapToException(Exception):
-	pass
+    pass
 
-#Txt File handler exceptions
+
+# Txt File handler exceptions
 class TxtAutoModeException(Exception):
-	pass
+    pass
