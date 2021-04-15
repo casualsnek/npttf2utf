@@ -2,7 +2,7 @@
 
 Python module/script to map Nepali ASCII font faces like Preeti, Sagarmatha, and more to devanagari unicode
 
-This is mainly a python module to help in mapping of various nepali ASCII fontfaces to its unicode counterpart ~~and unicode back to Preeti font face~~. It currently supports directly mapping passed strings (fontmapper.py) as well font auto detection and selective component selection for docx files (docxhandler.py) and plaintext files (txthandler.py).
+This is mainly a python module to help in mapping of various nepali ASCII font faces to its unicode counterpart and unicode or any unicode mappable font back to Preeti font face. It currently supports directly mapping passed strings (fontmapper.py) as well font auto detection and selective component selection for docx files (docxhandler.py) and plaintext files (txthandler.py).
 
 **Requirements**
 - python3
@@ -15,7 +15,7 @@ This is mainly a python module to help in mapping of various nepali ASCII fontfa
 ```
 $ git clone https://github.com/trippygeese/npttf2utf.git
 $ cd npttf2utf
-$ python __init__.py -m [mode] -f [origin font] -i [input file/string] -o [output file] -mf [mapping defination]
+$ python __init__.py -m [mode] -f [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
 ```
 **Parameters:**
 
@@ -25,9 +25,12 @@ $ python __init__.py -m [mode] -f [origin font] -i [input file/string] -o [outpu
 | -v*  | Shows version information |
 | -m  | Usage mode. "string" to pass input string and output on console window, "docx" for working on docx files and "plain" for working with plaintext files |
 | -f  | The font face which  was used for the string or creating the file. In "docx" mode you can use "auto" to autodetect used fonts and map them |
+| -of*  | The font to which the string or file will be mapped to. Currently, supports 'unicode' and 'Preeti' . Defaults to 'Preeti' if unspecified|
+| -dc*  | The components of docx which will be processed during mapping. Components are separated by a comma ',' (Defaults to all supported components 'body_paragraph,table,shape')|
+| -kf*  | While converting docx to Preeti known nepali unicode will be mapped to preeti and other fonts will be ignored. Specify fonts seperated by comma to add more fonts to default list "Kalimati,Mangal,Noto Sans Devanagari"'|
 | -i  | Input string or path to input file |
 | -o*  | Path to output file. Not required for "string" mode|
-| -mf*  | Path to mapping defination file. If not passed it will look for "map.json" in current script directory|
+| -mf*  | Path to mapping definition file. If not passed it will look for "map.json" in current script directory|
 
 *Note: The parameters marked with * are optional*
 
@@ -41,9 +44,25 @@ It will map "asdfghjk" to unicode following mapping for Preeti and output "ब�
 
 .
 
-2. To convert docx or txt file ("plain"/"docx" mode)
+2. To pass string in unicode in terminal and map it to preeti ("string" mode)
+```
+$ python __init__.py -m string -f unicode -of Preeti -i "सबिन आचार्य"
+```
+It will map "सबिन आचार्य" to Preeti and output ";lag cfrf/\o" (You can also convert other non unicode fonts like Kantipur, Sagarmatha etc to Preeti)
+
+.
+
+3. To convert docx or txt file ("plain"/"docx" mode) to unicode
 ```
 $ python __init__.py -m docx -f auto -i "document_with_ASCII_font_faces.docx" -o "document_mapped_to_unicode.docx"
+```
+It will map the content of document to unicode  and save it as "document_mapped_to_unicode.docx" ("auto" as font is available for "docx" mode only)
+
+<br>
+
+4. To convert docx or txt file ("plain"/"docx" mode) to Preeti
+```
+$ python __init__.py -m docx -f auto -of Preeti -i "document_with_ASCII_font_faces_or_unicode.docx" -o "document_mapped_to_preeti.docx" -dc "body_paragraph,table,shape" -kf "some,extra,unicode,fonts"
 ```
 It will map the content of document to unicode  and save it as "document_mapped_to_unicode.docx" ("auto" as font is available for "docx" mode only)
 
@@ -63,7 +82,7 @@ $ python
 
 ## **Class: npttf2utf.FontMapper**
 
-"npttf2utf.FontMapper" class can be used to map the fonts to their unicode conterpart. It is also the base for other document converters
+"npttf2utf.FontMapper" class can be used to map the fonts to their unicode counterpart. It is also the base for other document converters
 
 
 ### **Method: \_\_init \_\_**
@@ -76,13 +95,13 @@ Returns: None
 
 | Argument | Description |  Optional |
 |--|--|--|
-| map_json | Path to mapping defination file (Must be readable by current user) |  False |
+| map_json | Path to mapping definition file (Must be readable by current user) |  False |
 
 <br>
 
 ### **Method: map_to_unicode**
 
-This method maps the passed string written passed origin font to unicode using the mapping defination
+This method maps the passed string to of defined origin font to unicode using the mapping definition
 ```
 def map_to_unicode(self, string, from_font="Preeti", unescape_html=False):
 ```
@@ -104,6 +123,33 @@ Example usage:
 >> 
 ```
 
+
+<br>
+
+### **Method: map_to_preeti**
+
+This method maps the passed Devanagari unicode string to preeti using the preetimapper.py
+```
+def map_to_preeti(self, string, from_font="Preeti", unescape_html=False):
+```
+Returns: String
+
+| Argument | Description |  Optional |
+|--|--|--|
+| string | String to map |  False |
+| from_font | The origin font in which string was written. Defaults to "Preeti" if not passed|  True |
+| unescape_html | Pass True if the string needs to be html unescaped.  (Defaults to False) |  True |
+
+Example usage:
+
+```
+>> import npttf2utf
+>> mapper = npttf2utf.FontMapper("npttf2utf/map.json")
+>> mapper.map_to_preeti("सबिन आचार्य", from_font="unicode", unescape_html=False)
+;lag cfrf/\o
+>> 
+```
+
 <br>
 
 ## **Class: npttf2utf.DocxHandler**
@@ -121,14 +167,14 @@ Returns: None
 
 | Argument | Description |  Optional |
 |--|--|--|
-| rules_file | Path to mapping defination file (Must be readable by current user) |  False |
-| default_unicode_font_name | The name of font which will be set for converted segment of docx files. (Defaults to "Kalimati") |  True |
+| rules_file | Path to mapping definition file (Must be readable by current user) |  False |
+| default_unicode_font_name | The name of font which will be set for a converted segment of docx files. (Defaults to "Kalimati") |  True |
 
 <br>
 
 ### **Method: detect_used_fonts**
 
-This method returns list of fonts supported by mapping defination which are used in the docx file
+This method returns list of fonts supported by mapping definition which are used in the docx file
 ```
 def detect_used_fonts(self, docx_file_path):
 ```
@@ -144,17 +190,18 @@ Returns: List
 
 This method maps the font in docx file and creates new docx file with mapping applied
 ```
-def map_fonts(self, orginal_file_path, output_file_path="mapped.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table", "shape"]):
+def map_fonts(self, orginal_file_path, output_file_path="mapped.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table", "shape"], known_unicode_fonts=[]):
 ```
 Returns: None
 
 | Argument | Description |  Optional |
 |--|--|--|
-| orginal_file_path | Path to docx file whose fonts are to be mapped |  False |
+| original_file_path | Path to docx file whose fonts are to be mapped |  False |
 | output_file_path | Path where the mapped docx file is to saved (Defaults to "mapped.docx") |  True |
 | from_font | The origin font in which string was written. (Defaults to "auto"). "auto" can be passed to detect used font automatically and map them accordingly and leave english characters untouched |  True |
 | to_font | Target for font conversion. (Defaults to "unicode"). Only "unicode" is supported as of now |  True |
-| components | [List] List of components of docx file which will be looked up for text contents. (Defaults to: ["body_paragraph", "table", "shape"]). "body_paragraph", "table" and "shape" are supported as of now|  False |
+| components | [List] List of components of docx file which will be looked up for text contents. (Defaults to: ["body_paragraph", "table", "shape"]). "body_paragraph", "table" and "shape" are supported as of now|  True |
+| known_unicode_fonts | [List] List of extra nepali unicode font that when detected will be mapped (Only used while mapping to Preeti) |  True |
 
 Example usage:
 
@@ -163,7 +210,7 @@ Example usage:
 >> converter = npttf2utf.DocxHandler("npttf2utf/map.json", default_unicode_font_name="Kalimati")
 >> converter.detect_used_fonts("document_with_ASCII_font_faces.docx")
 ["Preeti", "Sagarmaths"]
->> converter.map_fonts("document_with_ASCII_font_faces.docx", output_file_path="mapped_document.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table"])
+>> converter.map_fonts("document_with_ASCII_font_faces.docx", output_file_path="mapped_document.docx", from_font="auto", to_font="unicode", components=["body_paragraph", "table"], known_unicode_fonts=["some", "extra", "nepali", "font"])
 >>
 ```
 
@@ -184,7 +231,7 @@ Returns: None
 
 | Argument | Description |  Optional |
 |--|--|--|
-| rules_file | Path to mapping defination file (Must be readable by current user) |  False |
+| rules_file | Path to mapping definition file (Must be readable by current user) |  False |
 
 <br>
 
@@ -192,29 +239,30 @@ Returns: None
 
 This method maps the font in txt file and creates new txt file with mapping applied
 ```
-def map_fonts(self, orginal_file_path, output_file_path="mapped.txt", from_font="Preeti", to_font="unicode", components=[]):
+def map_fonts(self, orginal_file_path, output_file_path="mapped.txt", from_font="Preeti", to_font="unicode", components=[], known_unicode_fonts=[]):
 ```
 Returns: None
 
 | Argument | Description |  Optional |
 |--|--|--|
-| orginal_file_path | Path to txt file whose fonts are to be mapped |  False |
+| original_file_path | Path to txt file whose fonts are to be mapped |  False |
 | output_file_path | Path where the mapped txt file is to saved (Defaults to "mapped.txt") |  True |
 | from_font | The origin font in which string was written. (Defaults to "Preeti"). |  True |
 | to_font | Target for font conversion. (Defaults to "unicode"). Only "unicode" is supported as of now |  True |
-| components | Serves no purpose, just there to match the method call of DocxHandler|  False |
+| components | Serves no purpose, just there to match the method call of DocxHandler|  True |
+| known_unicode_fonts | Serves no purpose, just there to match the method call of DocxHandler|  True |
 
 ```
 >> import npttf2utf
 >> converter = npttf2utf.TxTHandler("npttf2utf/map.json")
->> converter.map_fonts("txt_with_ASCII_font_faces.txt", output_file_path="mapped_txt.txt", from_font="Preeti", to_font="unicode", components=[])
+>> converter.map_fonts("txt_with_ASCII_font_faces.txt", output_file_path="mapped_txt.txt", from_font="Preeti", to_font="unicode", components=[], known_unicode_fonts=[])
 >>
 ```
 <br>
 
 ### Supported docx components
 
-  - Text content in Textboxes/Shapes
+  - Text content in Text boxes/Shapes
   - General paragraphs
   - Text content in table
   
@@ -239,7 +287,7 @@ Returns: None
 ### Todos
  - Add support for headers/footers
  - Optimize the code
- - Ability to unify font to Preeti as well
+ - Ability to unify fonts to Preeti as well
 
 ### Adding support for new file type
 
