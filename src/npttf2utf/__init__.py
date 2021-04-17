@@ -1,17 +1,17 @@
-if __name__ == "__main__":
-    import argparse
-    import json
-    import os
-    import zipfile
-    from base.docxhandler import DocxHandler as dh
-    from base.exceptions import *
-    from base.fontmapper import FontMapper as fm
-    from base.txthandler import TxtHandler as th
+import argparse
+import json
+import os
+import zipfile
+from .base.docxhandler import DocxHandler
+from .base.exceptions import *
+from .base.fontmapper import FontMapper
+from .base.txthandler import TxtHandler
 
+def main():
     about = """ 
     Created by : Sabin Acharya (@trippygeese on github)
     License    : 
-    Version    : v0.3A
+    Version    : 0.3.2
     Email      : sabin2059@protonmail.com
     """
     modes = ['string', 'plain', 'docx']
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         rule_file = args.mapfile
     if op_mode == "string":
         try:
-            converter = fm(rule_file)
+            converter = FontMapper(rule_file)
             if args.outputfont == 'unicode':
                 print(converter.map_to_unicode(args.input, from_font=args.font))
             elif args.outputfont == 'Preeti':
@@ -73,9 +73,9 @@ if __name__ == "__main__":
         converter = None
         try:
             if op_mode == "plain":
-                converter = th(rule_file)
+                converter = TxtHandler(rule_file)
             elif op_mode == "docx":
-                converter = dh(rule_file)
+                converter = DocxHandler(rule_file)
             converter.map_fonts(original_file_path=args.input, output_file_path=args.output, from_font=args.font,
                                 to_font=args.outputfont, components=splitnclean(args.docxcomponents),
                                 known_unicode_fonts=splitnclean(args.knownunicodefonts))
@@ -96,8 +96,3 @@ if __name__ == "__main__":
         #    print("Unexpected error... Exiting !  "+str(e))
     else:
         print("Unsupported operation mode")
-else:
-    from .base.fontmapper import *
-    from .base.docxhandler import *
-    from .base.txthandler import *
-    from .base.exceptions import *

@@ -7,17 +7,50 @@ This is mainly a python module to help in mapping of various nepali ASCII font f
 **Requirements**
 - python3
 
+
+## **Installation**
+
+### **1) Using pip - Pre packaged**
+```
+$ pip install npttf2utf
+        or
+$ pip3 install npttf2utf
+```
+
+Or you can package it locally and install. Useful if you want to change something before installing
+
+### **2) Using pip - Packaged manually**
+```
+$ pip install build
+    or
+$ pip3 install build
+$ git clone https://github.com/trippygeese/npttf2utf.git
+$ cd npttf2utf
+$ python3 -m build
+```
+This will create a .whl file for installation in 'dist' directory. To install
+```
+$ cd dist
+$ pip install *.whl
+    or
+$ pip3 install *.whl
+```
 <br>
 
 ## **Usage**
-
-### **1) As standalone script**
+### **1) As CLI application**
+#### **1) As standalone script without installing **
 ```
 $ git clone https://github.com/trippygeese/npttf2utf.git
-$ cd npttf2utf
-$ python __init__.py -m [mode] -f [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
+$ cd npttf2utf && cd src && cd npttf2utf
+$ python __main__.py -m [mode] -f [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
 ```
-**Parameters:**
+
+### **2) Package installed using pip **
+```
+$ npttf2utf -m [mode] -f [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
+```
+**Parameters (Same for both) :**
 
 | Parameter | Help/Usage |
 |--|--|
@@ -38,7 +71,7 @@ Example usage:
 
 1. To pass string in Preeti in terminal and map it to unicode ("string" mode)
 ```
-$ python __init__.py -m string -f Preeti -i "asdfghjk"
+$ npttf2utf -m string -f Preeti -i "asdfghjk"
 ```
 It will map "asdfghjk" to unicode following mapping for Preeti and output "बकमानजवप"
 
@@ -46,7 +79,7 @@ It will map "asdfghjk" to unicode following mapping for Preeti and output "ब�
 
 2. To pass string in unicode in terminal and map it to preeti ("string" mode)
 ```
-$ python __init__.py -m string -f unicode -of Preeti -i "सबिन आचार्य"
+$ npttf2utf -m string -f unicode -of Preeti -i "सबिन आचार्य"
 ```
 It will map "सबिन आचार्य" to Preeti and output ";lag cfrf/\o" (You can also convert other non unicode fonts like Kantipur, Sagarmatha etc to Preeti)
 
@@ -54,7 +87,7 @@ It will map "सबिन आचार्य" to Preeti and output ";lag cfrf/\o
 
 3. To convert docx or txt file ("plain"/"docx" mode) to unicode
 ```
-$ python __init__.py -m docx -f auto -i "document_with_ASCII_font_faces.docx" -o "document_mapped_to_unicode.docx"
+$ npttf2utf -m docx -f auto -i "document_with_ASCII_font_faces.docx" -o "document_mapped_to_unicode.docx"
 ```
 It will map the content of document to unicode  and save it as "document_mapped_to_unicode.docx" ("auto" as font is available for "docx" mode only)
 
@@ -62,18 +95,16 @@ It will map the content of document to unicode  and save it as "document_mapped_
 
 4. To convert docx or txt file ("plain"/"docx" mode) to Preeti
 ```
-$ python __init__.py -m docx -f auto -of Preeti -i "document_with_ASCII_font_faces_or_unicode.docx" -o "document_mapped_to_preeti.docx" -dc "body_paragraph,table,shape" -kf "some,extra,unicode,fonts"
+$ npttf2utf -m docx -f auto -of Preeti -i "document_with_ASCII_font_faces_or_unicode.docx" -o "document_mapped_to_preeti.docx" -dc "body_paragraph,table,shape" -kf "some,extra,unicode,fonts"
 ```
 It will map the content of document to unicode  and save it as "document_mapped_to_unicode.docx" ("auto" as font is available for "docx" mode only)
 
 <br>
 
 ### **2) As python module**
-- Clone the repository
-- Import the module
+
 
 ```
-$ git clone https://github.com/trippygeese/npttf2utf.git
 $ python
 >> import npttf2utf
 ```
@@ -295,7 +326,7 @@ Create a new file to handle the file type. (You can use docxhandler.py and modif
 
 ### Adding mapping for a new font
 
-Open "npttf2utf/map.json" and add a JSON key with this structure
+Open "src/npttf2utf/map.json" and add a JSON key with this structure
 
 ```
 "font_name":{
