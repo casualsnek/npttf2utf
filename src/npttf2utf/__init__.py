@@ -11,14 +11,14 @@ def main():
     about = """ 
     Created by : Sabin Acharya (@trippygeese on github)
     License    : 
-    Version    : 0.3.2
+    Version    : 0.3.3
     Email      : sabin2059@protonmail.com
     """
     modes = ['string', 'plain', 'docx']
     parser = argparse.ArgumentParser(description=about, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-V', '--version', action='version', version="0.1a")
     parser.add_argument('-m', '--mode', dest='mode', help='Conversion mode ', choices=modes, required=True)
-    parser.add_argument('-f', '--font', dest='font', help='Font used in input file. ("auto" can be used for docx mode)',
+    parser.add_argument('-if', '--input-font', dest='font', help='Font used in input file. ("auto" can be used for docx mode)',
                         default='preeti', required=True)
     parser.add_argument('-of', '--output-font', dest='outputfont',
                         help='Font to which output will be mapped to. (If unspecified output font will be set to '

@@ -39,16 +39,8 @@ $ pip3 install *.whl
 
 ## **Usage**
 ### **1) As CLI application**
-#### **1) As standalone script without installing **
 ```
-$ git clone https://github.com/trippygeese/npttf2utf.git
-$ cd npttf2utf && cd src && cd npttf2utf
-$ python __main__.py -m [mode] -f [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
-```
-
-### **2) Package installed using pip **
-```
-$ npttf2utf -m [mode] -f [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
+$ npttf2utf -m [mode] -if [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
 ```
 **Parameters (Same for both) :**
 
@@ -57,7 +49,7 @@ $ npttf2utf -m [mode] -f [origin font] -of [output font] -dc [docx components] -
 | -h*  | Shows help and information about the program |
 | -v*  | Shows version information |
 | -m  | Usage mode. "string" to pass input string and output on console window, "docx" for working on docx files and "plain" for working with plaintext files |
-| -f  | The font face which  was used for the string or creating the file. In "docx" mode you can use "auto" to autodetect used fonts and map them |
+| -if  | The font face which  was used for the string or creating the file. In "docx" mode you can use "auto" to autodetect used fonts and map them |
 | -of*  | The font to which the string or file will be mapped to. Currently, supports 'unicode' and 'Preeti' . Defaults to 'Preeti' if unspecified|
 | -dc*  | The components of docx which will be processed during mapping. Components are separated by a comma ',' (Defaults to all supported components 'body_paragraph,table,shape')|
 | -kf*  | While converting docx to Preeti known nepali unicode will be mapped to preeti and other fonts will be ignored. Specify fonts seperated by comma to add more fonts to default list "Kalimati,Mangal,Noto Sans Devanagari"'|
@@ -71,7 +63,7 @@ Example usage:
 
 1. To pass string in Preeti in terminal and map it to unicode ("string" mode)
 ```
-$ npttf2utf -m string -f Preeti -i "asdfghjk"
+$ npttf2utf -m string -if Preeti -of unicode -i "asdfghjk"
 ```
 It will map "asdfghjk" to unicode following mapping for Preeti and output "बकमानजवप"
 
@@ -79,7 +71,7 @@ It will map "asdfghjk" to unicode following mapping for Preeti and output "ब�
 
 2. To pass string in unicode in terminal and map it to preeti ("string" mode)
 ```
-$ npttf2utf -m string -f unicode -of Preeti -i "सबिन आचार्य"
+$ npttf2utf -m string -if unicode -of Preeti -i "सबिन आचार्य"
 ```
 It will map "सबिन आचार्य" to Preeti and output ";lag cfrf/\o" (You can also convert other non unicode fonts like Kantipur, Sagarmatha etc to Preeti)
 
@@ -87,7 +79,7 @@ It will map "सबिन आचार्य" to Preeti and output ";lag cfrf/\o
 
 3. To convert docx or txt file ("plain"/"docx" mode) to unicode
 ```
-$ npttf2utf -m docx -f auto -i "document_with_ASCII_font_faces.docx" -o "document_mapped_to_unicode.docx"
+$ npttf2utf -m docx -if auto -of unicode -i "document_with_ASCII_font_faces.docx" -o "document_mapped_to_unicode.docx"
 ```
 It will map the content of document to unicode  and save it as "document_mapped_to_unicode.docx" ("auto" as font is available for "docx" mode only)
 
@@ -95,7 +87,7 @@ It will map the content of document to unicode  and save it as "document_mapped_
 
 4. To convert docx or txt file ("plain"/"docx" mode) to Preeti
 ```
-$ npttf2utf -m docx -f auto -of Preeti -i "document_with_ASCII_font_faces_or_unicode.docx" -o "document_mapped_to_preeti.docx" -dc "body_paragraph,table,shape" -kf "some,extra,unicode,fonts"
+$ npttf2utf -m docx -if auto -of Preeti -i "document_with_ASCII_font_faces_or_unicode.docx" -o "document_mapped_to_preeti.docx" -dc "body_paragraph,table,shape" -kf "some,extra,unicode,fonts"
 ```
 It will map the content of document to unicode  and save it as "document_mapped_to_unicode.docx" ("auto" as font is available for "docx" mode only)
 
