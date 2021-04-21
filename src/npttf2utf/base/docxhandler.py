@@ -58,7 +58,7 @@ class DocxHandler:
                 used_unicode_font = font_property.attrib[
                     "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"
                 ]
-                used_font = "unicode"
+                used_font = "Unicode"
         return font_property, used_font, used_unicode_font
 
     def __map_now(self, map_to, font_property, text_container=None, used_font=None):
@@ -119,7 +119,7 @@ class DocxHandler:
                             # Check if the used font is in supported ttf fonts + "unicode"
                             if used_font in self.supported_ttf_fonts:
                                 set_from_font = used_font
-                                if to_font == "Preeti":
+                                if to_font.lower() == "preeti":
                                     if used_unicode_font not in (self.known_devanagari_unicode_fonts +
                                                                  known_unicode_fonts + self.supported_ttf_fonts):
                                         continue_mapping = False
@@ -150,7 +150,7 @@ class DocxHandler:
                     # If on auto auto mode, only change base font when mapping is possible
                     if from_font == "auto":
                         if used_font in self.supported_ttf_fonts:
-                            if to_font == "Preeti":
+                            if to_font.lower() == "preeti":
                                 if used_unicode_font not in (self.known_devanagari_unicode_fonts +
                                                              known_unicode_fonts + self.supported_ttf_fonts):
                                     continue_mapping = False

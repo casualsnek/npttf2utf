@@ -10,8 +10,8 @@ from .base.txthandler import TxtHandler
 def main():
     about = """ 
     Created by : Sabin Acharya (@trippygeese on github)
-    License    : 
-    Version    : 0.3.3
+    License    : GNU GENERAL PUBLIC LICENSE v3
+    Version    : 0.3.4
     Email      : sabin2059@protonmail.com
     """
     modes = ['string', 'plain', 'docx']

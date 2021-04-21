@@ -16,9 +16,9 @@ class TxtHandler:
                 lines_orginal = orginal_file.readlines()
             output_file =  open(output_file_path, "a")
             for line in lines_orginal:
-                if to_font == "unicode":
+                if to_font.lower() == "unicode":
                     output_file.write(self.mapper.map_to_unicode(line, from_font, False))
-                elif to_font == "Preeti":
+                elif to_font.lower() == "preeti":
                     output_file.write(self.mapper.map_to_preeti(line, from_font, False))
                 else:
                     raise UnsupportedMapToException

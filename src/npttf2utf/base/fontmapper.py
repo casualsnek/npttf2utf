@@ -9,11 +9,11 @@ class FontMapper:
     def __init__(self, map_json):
         self.all_rules = json.load(open(map_json, 'r'))
         self.supported_maps = list(self.all_rules.keys())
-        self.supported_maps.append("unicode")
+        self.supported_maps.append("Unicode")
         self.known_devanagari_unicode_fonts = ["Kalimati", "Mangal", "Noto Sans Devanagari"]
 
     def map_to_unicode(self, string, from_font="Preeti", unescape_html=False):
-        if not from_font == "unicode":
+        if not from_font.lower() == "unicode":
             if from_font in self.supported_maps:
                 if unescape_html:
                     string = html.unescape(string)
@@ -41,7 +41,7 @@ class FontMapper:
     def map_to_preeti(self, string, from_font="Preeti", unescape_html=False):
         if unescape_html:
             string = html.unescape(string)
-        if not from_font == "Preeti":
+        if not from_font.lower() == "preeti":
             # Map the string to unicode first
             unicode_mapped_string = self.map_to_unicode(string, from_font)
             # Now map the unicode to preeti
