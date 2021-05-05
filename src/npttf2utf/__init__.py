@@ -7,18 +7,20 @@ from .base.exceptions import *
 from .base.fontmapper import FontMapper
 from .base.txthandler import TxtHandler
 
+
 def main():
     about = """ 
     Created by : Sabin Acharya (@trippygeese on github)
     License    : GNU GENERAL PUBLIC LICENSE v3
-    Version    : 0.3.4
+    Version    : 0.3.5
     Email      : sabin2059@protonmail.com
     """
     modes = ['string', 'plain', 'docx']
     parser = argparse.ArgumentParser(description=about, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-V', '--version', action='version', version="0.1a")
     parser.add_argument('-m', '--mode', dest='mode', help='Conversion mode ', choices=modes, required=True)
-    parser.add_argument('-if', '--input-font', dest='font', help='Font used in input file. ("auto" can be used for docx mode)',
+    parser.add_argument('-if', '--input-font', dest='font',
+                        help='Font used in input file. ("auto" can be used for docx mode)',
                         default='preeti', required=True)
     parser.add_argument('-of', '--output-font', dest='outputfont',
                         help='Font to which output will be mapped to. (If unspecified output font will be set to '
@@ -39,13 +41,11 @@ def main():
     font = args.font
     op_mode = args.mode
 
-
     def splitnclean(string):
         lis = string.split(",")
         for index, item in enumerate(lis):
             lis[index] = item.strip()
         return lis
-
 
     rule_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "map.json")
     if args.mapfile is not None:
@@ -79,7 +79,7 @@ def main():
             converter.map_fonts(original_file_path=args.input, output_file_path=args.output, from_font=args.font,
                                 to_font=args.outputfont, components=splitnclean(args.docxcomponents),
                                 known_unicode_fonts=splitnclean(args.knownunicodefonts))
-            print("The converted file is saved as :"+args.output)
+            print("The converted file is saved as :" + args.output)
         except NoMapForOriginException:
             print("The mapping for selected origin font does not exist")
         except FileNotFoundError:

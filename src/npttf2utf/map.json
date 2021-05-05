@@ -242,7 +242,7 @@
             ]
         }
     },
-    "fontasy_himali_tt": {
+    "FONTASY_HIMALI_TT": {
         "version": "v0.01",
         "rules": {
             "character-map": {
@@ -724,7 +724,7 @@
             ]
         }
     },
-    "pcs_nepali": {
+    "PCS NEPALI": {
         "version": "v0.1a",
         "rules": {
             "character-map": {

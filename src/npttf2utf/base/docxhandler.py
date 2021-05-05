@@ -75,7 +75,7 @@ class DocxHandler:
             # Replace original text with mapped text
             if text_container is not None:
                 original_text = text_container.text
-                text_container.text = self.mapper.map_to_preeti(original_text, used_font, True)
+                text_container.text = self.mapper.map_to_preeti(original_text, used_font, unescape_html_input=True)
         elif map_to.lower() == "unicode":
             font_property.attrib[
                 "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"
@@ -83,7 +83,7 @@ class DocxHandler:
             # Replace original text with mapped text
             if text_container is not None:
                 original_text = text_container.text
-                text_container.text = self.mapper.map_to_unicode(original_text, used_font, True)
+                text_container.text = self.mapper.map_to_unicode(original_text, used_font, unescape_html_input=True)
         else:
             raise UnsupportedMapToException("Document cannot be mapped to target ")
 

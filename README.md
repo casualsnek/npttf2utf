@@ -134,14 +134,15 @@ Returns: String
 |--|--|--|
 | string | String to map |  False |
 | from_font | The origin font in which string was written. Defaults to "Preeti" if not passed|  True |
-| unescape_html | Pass True if the string needs to be html unescaped.  (Defaults to False) |  True |
+| unescape_html_input | Unescape HTML entities in input string before mapping them (Bool) (Defaults to False) |  True |
+| escape_html_output | Escape HTML entities in mapped string before returning them (Bool) (Defaults to False) |  True |
 
 Example usage:
 
 ```
 >> import npttf2utf
 >> mapper = npttf2utf.FontMapper("npttf2utf/map.json")
->> mapper.map_to_unicode("asdfghjk", from_font="Preeti", unescape_html=False)
+>> mapper.map_to_unicode("asdfghjk", from_font="Preeti", unescape_html_input=False, escape_html_output=False)
 बकमानजवप
 >> 
 ```
@@ -161,14 +162,15 @@ Returns: String
 |--|--|--|
 | string | String to map |  False |
 | from_font | The origin font in which string was written. Defaults to "Preeti" if not passed|  True |
-| unescape_html | Pass True if the string needs to be html unescaped.  (Defaults to False) |  True |
+| unescape_html_input | Unescape HTML entities in input string before mapping them (Bool) (Defaults to False) |  True |
+| escape_html_output | Escape HTML entities in mapped string before returning them (Bool) (Defaults to False) |  True |
 
 Example usage:
 
 ```
 >> import npttf2utf
 >> mapper = npttf2utf.FontMapper("npttf2utf/map.json")
->> mapper.map_to_preeti("सबिन आचार्य", from_font="unicode", unescape_html=False)
+>> mapper.map_to_preeti("सबिन आचार्य", from_font="unicode", unescape_html_input=False, escape_html_output=False)
 ;lag cfrf/\o
 >> 
 ```
@@ -296,8 +298,8 @@ Returns: None
   - Preeti
   - Sagarmatha
   - Kantipur
-  - fontasy_himali_tt
-  - pcs_nepali
+  - FONTASY_HIMALI_TT
+  - PCS NEPALI
   
 <br>
 
