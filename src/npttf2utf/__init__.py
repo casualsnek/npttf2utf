@@ -12,7 +12,7 @@ def main():
     about = """ 
     Created by : Sabin Acharya (@trippygeese on github)
     License    : GNU GENERAL PUBLIC LICENSE v3
-    Version    : 0.3.5
+    Version    : 0.3.6
     Email      : sabin2059@protonmail.com
     """
     modes = ['string', 'plain', 'docx']

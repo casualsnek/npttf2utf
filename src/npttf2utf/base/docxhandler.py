@@ -29,7 +29,7 @@ class DocxHandler:
         with zipfile.ZipFile(original_file_path, 'r') as zipObj:
             zipObj.extractall(tmp_dir)
             filenames = zipObj.namelist()
-        with open(os.path.join(tmp_dir, 'word/document.xml'), 'w') as f:
+        with open(os.path.join(tmp_dir, 'word/document.xml'), 'w', encoding="utf-8") as f:
             f.write(xml_content)
         with zipfile.ZipFile(output_file_path, "w") as docx:
             for filename in filenames:
