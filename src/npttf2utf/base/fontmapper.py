@@ -1,13 +1,16 @@
 import re
 import json
 import html
-from .exceptions import NoMapForOriginException
+from .exceptions import NoMapForOriginException, MapFileNotFoundException
 from .preetimapper import convert as pmconvert
 
 
 class FontMapper:
     def __init__(self, map_json):
-        self.all_rules = json.load(open(map_json, 'r', encoding='utf-8'))
+        try:
+            self.all_rules = json.load(open(map_json, 'r', encoding='utf-8'))
+        except FileNotFoundError as e:
+            raise MapFileNotFoundException(str(e))
         self.supported_maps = list(self.all_rules.keys())
         self.supported_maps.append("Unicode")
         self.known_devanagari_unicode_fonts = ["Kalimati", "Mangal", "Noto Sans Devanagari"]

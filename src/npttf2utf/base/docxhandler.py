@@ -162,7 +162,6 @@ class DocxHandler:
 
     def detect_used_fonts(self, docx_file_path):
         detected_supported_fonts = []
-
         tree = ET.ElementTree(ET.fromstring(self.__get_xml(docx_file_path)))
         root = tree.getroot()
 
@@ -183,7 +182,7 @@ class DocxHandler:
         xml_string = self.__get_xml(original_file_path)
         tree = ET.ElementTree(ET.fromstring(xml_string))
         root = tree.getroot()
-        # GET INSIDE DA BODIE
+        # GET INSIDE THE BODY
         for body in root.iterfind("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}body"):
             # Process normal paragraphs. They (w:p) lie directly inside body as child
             general_paragraphs = body.findall("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p")
@@ -227,8 +226,8 @@ class DocxHandler:
 
         tmp_dir = tempfile.mkdtemp()
         self.__register_namespaces(StringIO(xml_string))
-        tree.write(os.path.join(tmp_dir, "document.xml"), encoding="utf-8", xml_declaration=True)
-        with open(os.path.join(tmp_dir, "document.xml"), "r") as f:
+        tree.write(os.path.join(tmp_dir, "document.xml"), encoding="utf-8",xml_declaration=True)
+        with open(os.path.join(tmp_dir, "document.xml"), "r", encoding="utf-8", errors="ignore") as f:
             xml_content = f.read()
         self.__save_docx(xml_content, output_file_path, original_file_path)
         shutil.rmtree(tmp_dir)

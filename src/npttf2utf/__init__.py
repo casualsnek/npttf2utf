@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 import zipfile
-from .base.docxhandler import DocxHandler
+from .base.docxhandler import DocxHandler, ET
 from .base.exceptions import *
 from .base.fontmapper import FontMapper
 from .base.txthandler import TxtHandler
@@ -12,7 +12,7 @@ def main():
     about = """ 
     Created by : Sabin Acharya (@trippygeese on github)
     License    : GNU GENERAL PUBLIC LICENSE v3
-    Version    : 0.3.6
+    Version    : 0.3.7
     Email      : sabin2059@protonmail.com
     """
     modes = ['string', 'plain', 'docx']
@@ -50,28 +50,17 @@ def main():
     rule_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "map.json")
     if args.mapfile is not None:
         rule_file = args.mapfile
-    if op_mode == "string":
-        try:
+    try:
+        if op_mode == "string":
             converter = FontMapper(rule_file)
-            if args.outputfont == 'unicode':
+            if args.outputfont.lower() == 'unicode':
                 print(converter.map_to_unicode(args.input, from_font=args.font))
-            elif args.outputfont == 'Preeti':
+            elif args.outputfont.lower() == 'preeti':
                 print(converter.map_to_preeti(args.input, from_font=args.font))
             else:
                 raise UnsupportedMapToException
-        except NoMapForOriginException:
-            print("The mapping for selected origin font does not exist")
-        except FileNotFoundError:
-            print("Mapping definition file cannot be opened or does not exist.")
-        except json.decoder.JSONDecodeError:
-            print("Invalid mapping definition file")
-        except UnsupportedMapToException:
-            print("Cannot map to specified output font")
-        except Exception as e:
-            print("Unexpected error... Exiting !  " + str(e))
-    elif op_mode == "plain" or op_mode == "docx":
-        converter = None
-        try:
+        elif op_mode == "plain" or op_mode == "docx":
+            converter = None
             if op_mode == "plain":
                 converter = TxtHandler(rule_file)
             elif op_mode == "docx":
@@ -79,20 +68,23 @@ def main():
             converter.map_fonts(original_file_path=args.input, output_file_path=args.output, from_font=args.font,
                                 to_font=args.outputfont, components=splitnclean(args.docxcomponents),
                                 known_unicode_fonts=splitnclean(args.knownunicodefonts))
-            print("The converted file is saved as :" + args.output)
-        except NoMapForOriginException:
-            print("The mapping for selected origin font does not exist")
-        except FileNotFoundError:
-            print("Mapping definition file cannot be opened or does not exist.")
-        except json.decoder.JSONDecodeError:
-            print("Invalid mapping definition file")
-        except UnsupportedMapToException:
-            print("Cannot map to given output font !")
-        except TxtAutoModeException:
-            print("Font autodetect does not work on txt files :(")
-        except zipfile.BadZipFile:
-            print("Improper docx file")
-        # except Exception as e:
-        #    print("Unexpected error... Exiting !  "+str(e))
-    else:
-        print("Unsupported operation mode")
+            print("The converted file is saved as : {}".format(args.output))
+        else:
+            print("Unsupported operation mode")
+    except MapFileNotFoundException:
+        print("Cannot find the map file '{}'".format(rule_file))
+    except NoMapForOriginException:
+        print("The mapping for selected origin font does not exist")
+    except FileNotFoundError:
+        print("Cannot find the input file at '{}'".format(args.input))
+    except json.decoder.JSONDecodeError:
+        print("Invalid mapping file. {}".format(rule_file))
+    except UnsupportedMapToException:
+        print("Cannot map to given output font ! ({}) ".format(args.outputfont))
+    except TxtAutoModeException:
+        print("Font auto detection does not work on plain text files :(")
+    except (zipfile.BadZipFile, KeyError, UnicodeDecodeError, ET.ParseError):
+        print("The type of file '{}' either does not match the conversion mode (-m) or "
+              "the file is corrupted.".format(args.input))
+    except PermissionError:
+        print("Permission denied to read the input file or write the output file.")
