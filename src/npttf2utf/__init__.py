@@ -10,10 +10,10 @@ from .base.txthandler import TxtHandler
 
 def main():
     about = """ 
-    Created by : Sabin Acharya (@trippygeese on github)
+    Created by : Casual Snek (@casualsnek on GitHub)
     License    : GNU GENERAL PUBLIC LICENSE v3
     Version    : 0.3.7
-    Email      : sabin2059@protonmail.com
+    Email      : casualsnek@protonmail.com
     """
     modes = ['string', 'plain', 'docx']
     parser = argparse.ArgumentParser(description=about, formatter_class=argparse.RawDescriptionHelpFormatter)
