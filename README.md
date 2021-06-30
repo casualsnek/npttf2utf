@@ -1,5 +1,7 @@
 # **npTTF2UTF**
 
+[![Visits Badge](https://badges.pufler.dev/visits/casualsnek/npttf2utf)](https://github.com/casualsnek)
+
 Python module/script to map Nepali ASCII font faces like Preeti, Sagarmatha, and more to devanagari unicode
 
 This is mainly a python module to help in mapping of various nepali ASCII font faces to its unicode counterpart and unicode or any unicode mappable font back to Preeti font face. It currently supports directly mapping passed strings (fontmapper.py) as well font auto detection and selecting components to map for mapping for docx files (docxhandler.py) and plain text files (txthandler.py).
