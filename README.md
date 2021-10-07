@@ -308,13 +308,15 @@ Returns: None
 ### Supported Output fonts
 
   - Devanagari Unicode
+  - Preeti
 
 <br>
 
 ### Todos
  - Add support for headers/footers
  - Optimize the code
- - Ability to unify fonts to Preeti as well
+ - Add support for .odt files
+ - ~~Ability to unify fonts to Preeti as well~~
 
 ### Adding support for new file type
 
