@@ -26,7 +26,7 @@ Or you can package it locally and install. Useful if you want to change somethin
 $ pip install build
     or
 $ pip3 install build
-$ git clone https://github.com/trippygeese/npttf2utf.git
+$ git clone https://github.com/casualsnek/npttf2utf.git
 $ cd npttf2utf
 $ python3 -m build
 ```
