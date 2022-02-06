@@ -1,9 +1,5 @@
 # **npTTF2UTF**
 
-### WebApp based on npTTF2UTF
-[npfontunify](https://github.com/casualsnek/npfontunify) is a web app that uses this library to map documents and text. If you just want to convert documents without setting up everything up, there is a demo page in the readme of npfontunify that you can use without setting up or downloading anything !
-
-
 [![Visits Badge](https://badges.pufler.dev/visits/casualsnek/npttf2utf)](https://github.com/casualsnek)
 
 Python module/script to map Nepali ASCII font faces like Preeti, Sagarmatha, and more to devanagari unicode
@@ -44,6 +40,11 @@ $ pip3 install *.whl
 <br>
 
 ## **Usage**
+
+### **0) As WebApp based on npTTF2UTF ( if you just need the work done )
+[npfontunify](https://github.com/casualsnek/npfontunify) is a web app that uses this library to map documents and text. If you just want to convert documents without setting up everything up, there is a demo page in the readme of npfontunify that you can use without setting up or downloading anything !
+
+
 ### **1) As CLI application**
 ```
 $ npttf2utf -m [mode] -if [origin font] -of [output font] -dc [docx components] -kf [extra known unicode fonts] -i [input file/string] -o [output file] -mf [mapping defination]
