@@ -55,10 +55,13 @@ class DocxHandler:
                     "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii"
                 ]
             except KeyError:
-                used_unicode_font = font_property.attrib[
-                    "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"
-                ]
-                used_font = "Unicode"
+                try:
+                    used_unicode_font = font_property.attrib[
+                        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}cs"
+                    ]
+                    used_font = "Unicode"
+                except KeyError:
+                    pass
         return font_property, used_font, used_unicode_font
 
     def __map_now(self, map_to, font_property, text_container=None, used_font=None):
